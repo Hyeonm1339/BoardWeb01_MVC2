@@ -3,60 +3,14 @@
 ## 목차
 
 - # 목차
-      	- [용어](#용어)
       	- [수행 순서](#수행-순서)
       	- [결합도](#결합도)
       	- [빈](#빈)
       	- [의존 주입](#의존-주입)
       	- [어노테이션](#Annotation)
-      	- [계층](#계층)
       	- [DB세팅](#데이터베이스-연결)
       	- [컨트롤러설정](#컨트롤러)
       	- [참고 자료](#참고-자료)
-
-## 용어
-
-1.  IOC(제어의 역전) Inversion of Control
-2.  DI(의존주입) Dependecy injection
-    - 생성자 인젝션
-    - setter 인젝션
-    - 멤버변수 인젝션
-3.  AOP(공통관심사 OR 횡단관심사) Aspect Oriented Programming
-
-    - 사용하는쪽의 형식이 반드시 메소드이여야만 한다.
-    - 공통 관심사는 메소드 형식에만 적용 가능하다.
-    - AOP 추가 applicationContext.xml -> Namespaces -> _AOP 체크_
-
-    - 조인포인트 : 포인트컷이 될 수 있는 대상 (JoinPoin import) - getSignature() - getTarget() - getArgs() - getName()
-    - 포인트컷 : 조인포인트 중에서 공통관심사를 적용받는 대상
-    - 어드바이스 : 공통관심사에 해당되는 기능.(메소드)
-    - 에스팩트 / 어드바이져 : 포인트컷 + 어드바이스를 합친것.
-    - 위빙 : Aspect가 지정된 객체를 새로운 프록시 객체로 생성하는 과정.
-      [AOP관련 참고자료](https://tram-devlog.tistory.com/entry/Spring-AOP-weaving-proxy)
-
----
-
-    <aop:config>
-    	<aop:pointcut expression="execution(com.springbook.biz..*Impl.*(..))" id="allPointCut"/> ->공통관심사가 적용될 범위설정
-    	<aop:aspect ref="log"> ->공통관심사의 대상 'log'
-    		<aop:after method="printLog()" pointcut-ref="allPointCut/> ->대상(log)의 지정할 메소드 'printLog()' / 사용할 대상-> 'allPointCut'
-    	</aop:aspect>
-    </aop:config>
-
----
-
-    - AOP Around 사용시
-
----
-
-    public Object arroundLog(ProceedingJoinPoint pjp) throws Throwable{
-    	Object return obj + pjp.proceed();
-    	return null;
-    }
-
----
-
-4.  BEAN(강낭콩) 스프링에서 객체를 빈이라 부름
 
 ## 수행 순서
 
@@ -354,20 +308,6 @@ public class LogAdvice {
 		@AfterReturning(pointcut="경로지정대상",returning="매개변수")
 ```
 
----
-
-## 계층
-
-> **Persentation(화면계층)** - 화면에 보여주는 기술을 사용하는 영역
->
-> **Business(비즈니스 계층)** - 고객이 원하는 요구사항을 반영하는 계층
->
-> - VO, DAO, Service, Servicelmpl
->
-> **Persistence(영속계층 / 데이터 계층)** - 데이터를 어떤 방식으로 보관하고 사용하는가에 대한 설계가 들어가는 계층
-
----
-
 ## 데이터베이스 연결
 
 ### Commons DBCP (Maven JDBC Pools 사용)
@@ -437,92 +377,6 @@ database.properties파일의 key값을 각 name에맞게 세터주입시켜줌.(
 
 > Build Path-> configure Build Path -> Library/Add External JARS -> 필요한JAR파일 열기 -> Deployment Assembly -> ADD -> JAVA Build Path Entries -> 파일추가하기
 
-### oracle cloud 연결설정
-
-```
-public static Connection getConnection() {
-	try {
-		Class.forName("oracle.jdbc.driver.OracleDriver");
-		Connection conn = DriverManager.getConnection(
-			"jdbc:oracle:thin:@HYEONM1339_medium?TNS_ADMIN=[파일경로]",
-				"admin", "[비밀번호]");
-		System.out.println("DB 연결 완료");
-		return conn;
-	} catch (ClassNotFoundException e) {
-		System.out.println("JDBC 드라이버 로드 에러");
-	} catch (SQLException e) {
-		System.out.println("DB연결 오류");
-	}
-	return null;
-}
-```
-
-### DataBase close 메소드
-
-```
->public static void close(PreparedStatement stmt, Connection conn) {
-	if (stmt != null) {
-		try {
-			if (!stmt.isClosed())
-				stmt.close();
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} finally {
-			stmt = null;
-		}
-	}
-	if (conn != null) {
-		try {
-			if (!conn.isClosed())
-				conn.close();
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} finally {
-			conn = null;
-		}
-	}
-}
-public static void close(ResultSet rs, PreparedStatement stmt, Connection conn) {
-	if (rs != null) {
-		try {
-			if (!rs.isClosed())
-				rs.close();
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} finally {
-			rs = null;
-		}
-	}
-	if (stmt != null) {
-		try {
-			if (!stmt.isClosed())
-				stmt.close();
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} finally {
-			stmt = null;
-		}
-	}
-	if (conn != null) {
-		try {
-			if (!conn.isClosed())
-				conn.close();
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} finally {
-			conn = null;
-		}
-	}
-}
-```
-
----
-
 ### 컨트롤러
 
 - 디스패처서블릿이(프론트컨트롤러) 요청을 받아 핸들러와 정보를 주고받고, 그정보를 토대로 컨트롤러와 다시 연결 후 최종적으로 뷰를 실행한다.
@@ -536,13 +390,25 @@ public class HandlerMapping {
 
 	public HandlerMapping() {
 		mappings = new HashMap<String, Controller>();	//키,밸류값을 갖는 해쉬맵객체를 문자열,컨트롤러를 타입으로 생성
-		mappings.put("/loing.do", new LoginController());  //login.do요청이 들어오면 로그인컨트롤러를 생성
+		mappings.put("/loing.do", new LoginController());  //login.do요청이 들어올때 그에맞는 로그인컨트롤러 객체를 생성
 	}
 
 	public Controller getController(String path) {
-		return mappings.get(path);
+		return mappings.get(path);					//미리 만들어둔 키밸류값에 path값 [경로 ex)login.do]을 넘겨주어 원하는 밸류(LoginController()를 반환
 	}
 
+}
+```
+
+- DispatcherServlet에 핸들러매핑 등록
+
+```
+public class DispatcherServlet extends HttpServlet {
+	private static final long serialVersionUID = 1L;
+	private HandlerMapping handlerMapping;		//핸들러 맵핑 객체 생성
+
+public void init() throws ServletException{		//초기화 메서드 작성
+	handlerMapping = new HandlerMapping();
 }
 ```
 
