@@ -10,5 +10,6 @@
 </h1>
 
 <P>  The time on the server is ${serverTime}. </P>
+<a href="../login.jsp">메인페이지로 이동</a>
 </body>
 </html>

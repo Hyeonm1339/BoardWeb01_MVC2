@@ -5,12 +5,14 @@
 <%
 	request.setCharacterEncoding("utf-8");
 	String title = request.getParameter("title");
+	String writer = request.getParameter("writer");
 	String content = request.getParameter("content");
 	String seq = request.getParameter("seq");
 	
 	BoardVO vo = new BoardVO();
 	vo.setTitle(title);
 	vo.setContent(content);
+	vo.setWriter(writer);
 	vo.setSeq(Integer.parseInt(seq));
 	
 	BoardDAO boardDAO = new BoardDAO();

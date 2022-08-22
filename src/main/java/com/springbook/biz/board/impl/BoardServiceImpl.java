@@ -40,8 +40,8 @@ public class BoardServiceImpl implements BoardService {
 	}
 
 	@Override
-	public List<BoardVO> getBoardList() {
-		return bDao.getBoardList();
+	public List<BoardVO> getBoardList(BoardVO vo) {
+		return bDao.getBoardList(vo);
 	}
 
 }

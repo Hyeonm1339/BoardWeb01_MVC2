@@ -19,6 +19,7 @@ public class BoardRowMapper implements RowMapper<BoardVO> {
 		bVo.setRegdate(rs.getDate("regdate"));
 		bVo.setCnt(rs.getInt("cnt"));
 		
+		
 		return bVo;
 	}
 

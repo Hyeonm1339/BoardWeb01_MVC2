@@ -22,7 +22,7 @@ public class AfterReturningAdvice {
 				System.out.println(user.getName() + " 로그인 (admin)");
 			}
 		}
-		System.out.println("[AfterReturning] " + method + "() 메소드 리턴값 : " + returnObj.toString());
+//		System.out.println("[AfterReturning] " + method + "() 메소드 리턴값 : " + returnObj.toString());
 	}
 
 
